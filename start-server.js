@@ -15,6 +15,21 @@ if (!fs.existsSync(path.join(serverDir, 'node_modules'))) {
   require('child_process').execSync('npm install', { cwd: serverDir, stdio: 'inherit' });
 }
 
+// Automatically sync database schema with cloud database on launch
+if (process.env.DATABASE_URL) {
+  try {
+    console.log('🔄 Syncing database tables with Prisma schema...');
+    require('child_process').execSync('npx prisma db push --schema=./prisma/schema.prisma --accept-data-loss', {
+      cwd: serverDir,
+      stdio: 'inherit',
+      env: process.env
+    });
+    console.log('✅ Database schema synchronized successfully.');
+  } catch (err) {
+    console.warn('⚠️ Prisma db push note:', err.message);
+  }
+}
+
 const child = spawn('node', ['src/index.js'], {
   cwd: serverDir,
   stdio: 'inherit',
