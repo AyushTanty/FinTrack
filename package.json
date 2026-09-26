@@ -1,9 +1,13 @@
 {
   "name": "fintrack-root",
   "version": "1.0.0",
+  "bin": {
+    "Root": "./start-server.js"
+  },
   "scripts": {
-    "start": "cd server && npm start",
-    "build": "cd server && npm install && npx prisma generate"
+    "postinstall": "cd server && npm install && npx prisma generate",
+    "build": "cd server && npm install && npx prisma generate",
+    "start": "node start-server.js"
   },
   "devDependencies": {
     "prisma": "^5.22.0"
