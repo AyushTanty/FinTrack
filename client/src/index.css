@@ -1,0 +1,451 @@
+/* ==========================================================================
+   Quiet Fiscal Clarity — Dark Mode Design System
+   Engineered for mindful, high-trust financial stewardship
+   ========================================================================== */
+
+:root,
+[data-bs-theme="dark"] {
+  /* Core Canvas & Surfaces */
+  --canvas-base: #0F172A;
+  --surface-card: #1E293B;
+  --surface-inset: #182234;
+  --surface-hover: #24334A;
+  --border-subtle: #334155;
+  --border-focus: #4F46E5;
+
+  /* Typography Colors */
+  --text-primary: #F8FAFC;
+  --text-secondary: #94A3B8;
+  --text-tertiary: #64748B;
+
+  /* Brand & Accents */
+  --brand-primary: #F8FAFC;
+  --brand-on-primary: #0F172A;
+  --accent-indigo: #4F46E5;
+  --accent-indigo-hover: #4338CA;
+  --accent-indigo-tint: rgba(79, 70, 229, 0.15);
+
+  /* Semantic Fiscal Indicators */
+  --fiscal-income: #10B981;
+  --fiscal-income-bg: rgba(16, 185, 129, 0.12);
+  --fiscal-income-border: rgba(16, 185, 129, 0.25);
+
+  --fiscal-warning: #F59E0B;
+  --fiscal-warning-bg: rgba(245, 158, 11, 0.12);
+  --fiscal-warning-border: rgba(245, 158, 11, 0.25);
+
+  --fiscal-expense: #EF4444;
+  --fiscal-expense-bg: rgba(239, 68, 68, 0.12);
+  --fiscal-expense-border: rgba(239, 68, 68, 0.25);
+
+  /* Bootstrap Dark Theme Overrides */
+  --bs-body-bg: var(--canvas-base);
+  --bs-body-color: var(--text-primary);
+  --bs-secondary-color: var(--text-secondary);
+  --bs-border-color: var(--border-subtle);
+  --bs-card-bg: var(--surface-card);
+  --bs-card-border-color: var(--border-subtle);
+  --bs-modal-bg: var(--surface-card);
+  --bs-modal-border-color: var(--border-subtle);
+  --bs-tertiary-bg: var(--surface-inset);
+  --bs-primary: #4F46E5;
+  --bs-primary-rgb: 79, 70, 229;
+}
+
+/* Global Reset & Base Typography */
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--canvas-base);
+  color: var(--text-primary);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Strict Financial Numerical Formatting */
+.tabular-nums,
+.financial-num,
+.badge,
+td, th,
+.display-4, .display-5, .display-6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+  font-variant-numeric: tabular-nums slashed-zero;
+  font-feature-settings: "tnum" 1, "zero" 1;
+}
+
+/* Cards & Surfaces */
+.card {
+  background-color: var(--surface-card) !important;
+  border: 1px solid var(--border-subtle) !important;
+  border-radius: 0.5rem !important; /* 8px Soft level 1 */
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.25), 0 1px 2px -1px rgba(0, 0, 0, 0.2) !important;
+  color: var(--text-primary) !important;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.card-header {
+  background-color: transparent !important;
+  border-bottom: 1px solid var(--border-subtle) !important;
+  color: var(--text-primary) !important;
+  padding: 1rem 1.25rem !important;
+  font-weight: 600;
+}
+
+.card-footer {
+  background-color: transparent !important;
+  border-top: 1px solid var(--border-subtle) !important;
+  color: var(--text-secondary) !important;
+}
+
+/* Data Tables */
+.table {
+  --bs-table-bg: transparent;
+  --bs-table-color: var(--text-primary);
+  --bs-table-border-color: var(--border-subtle);
+  margin-bottom: 0;
+}
+
+.table th {
+  background-color: var(--surface-inset) !important;
+  color: var(--text-secondary) !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.04em !important;
+  border-bottom: 1px solid var(--border-subtle) !important;
+  padding: 0.75rem 1rem !important;
+}
+
+.table td {
+  padding: 0.85rem 1rem !important;
+  vertical-align: middle;
+  border-bottom: 1px solid var(--border-subtle) !important;
+  font-size: 13px;
+}
+
+.table-hover tbody tr:hover td {
+  background-color: var(--surface-hover) !important;
+}
+
+/* Form Controls & Inputs */
+.form-control,
+.form-select {
+  background-color: var(--canvas-base) !important;
+  border: 1px solid #475569 !important;
+  color: var(--text-primary) !important;
+  border-radius: 0.375rem !important; /* 6px */
+  padding: 0.5rem 0.75rem !important;
+  font-size: 14px !important;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--accent-indigo) !important;
+  box-shadow: 0 0 0 3px var(--accent-indigo-tint) !important;
+  outline: none !important;
+}
+
+.form-control::placeholder {
+  color: var(--text-tertiary) !important;
+}
+
+.input-group-text {
+  background-color: var(--surface-card) !important;
+  border: 1px solid #475569 !important;
+  color: var(--text-secondary) !important;
+}
+
+/* Buttons */
+.btn-primary {
+  background-color: #4F46E5 !important;
+  border-color: #4F46E5 !important;
+  color: #FFFFFF !important;
+  font-weight: 500;
+  border-radius: 0.375rem !important;
+  padding: 0.45rem 1rem;
+  transition: all 0.15s ease;
+}
+
+.btn-primary:hover {
+  background-color: #4338CA !important;
+  border-color: #4338CA !important;
+}
+
+.btn-outline-primary {
+  color: #A5B4FC !important;
+  border-color: #4F46E5 !important;
+  border-radius: 0.375rem !important;
+}
+
+.btn-outline-primary:hover {
+  background-color: #4F46E5 !important;
+  color: #FFFFFF !important;
+}
+
+.btn-outline-secondary {
+  color: var(--text-secondary) !important;
+  border-color: var(--border-subtle) !important;
+  border-radius: 0.375rem !important;
+}
+
+.btn-outline-secondary:hover {
+  background-color: var(--surface-hover) !important;
+  color: var(--text-primary) !important;
+}
+
+.btn-success {
+  background-color: #10B981 !important;
+  border-color: #10B981 !important;
+  color: #FFFFFF !important;
+  font-weight: 500;
+}
+
+.btn-danger {
+  background-color: #EF4444 !important;
+  border-color: #EF4444 !important;
+  color: #FFFFFF !important;
+}
+
+.btn-outline-danger {
+  color: #F87171 !important;
+  border-color: rgba(239, 68, 68, 0.4) !important;
+}
+
+.btn-outline-danger:hover {
+  background-color: #EF4444 !important;
+  color: #FFFFFF !important;
+}
+
+/* Modals */
+.modal-content {
+  background-color: var(--surface-card) !important;
+  border: 1px solid var(--border-subtle) !important;
+  border-radius: 0.75rem !important; /* 12px Soft Level 1 */
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.4) !important;
+  color: var(--text-primary) !important;
+}
+
+.modal-header {
+  border-bottom: 1px solid var(--border-subtle) !important;
+}
+
+.modal-footer {
+  border-top: 1px solid var(--border-subtle) !important;
+}
+
+.btn-close {
+  filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+/* Nav Tabs */
+.nav-tabs {
+  border-bottom: 1px solid var(--border-subtle) !important;
+}
+
+.nav-tabs .nav-link {
+  color: var(--text-secondary) !important;
+  border: none !important;
+  border-bottom: 2px solid transparent !important;
+  padding: 0.65rem 1rem !important;
+  font-weight: 500;
+  transition: all 0.15s ease;
+}
+
+.nav-tabs .nav-link:hover {
+  color: var(--text-primary) !important;
+  border-bottom-color: var(--border-subtle) !important;
+}
+
+.nav-tabs .nav-link.active {
+  color: #818CF8 !important;
+  background-color: transparent !important;
+  border-bottom: 2px solid #6366F1 !important;
+  font-weight: 600;
+}
+
+/* Progress Bars */
+.progress {
+  background-color: var(--surface-inset) !important;
+  height: 6px !important;
+  border-radius: 3px !important;
+  overflow: hidden;
+}
+
+.progress-bar {
+  transition: width 0.3s ease;
+}
+
+/* Recharts Custom Tooltip Styling */
+.recharts-default-tooltip {
+  background-color: var(--surface-card) !important;
+  border: 1px solid var(--border-subtle) !important;
+  border-radius: 0.375rem !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4) !important;
+  color: var(--text-primary) !important;
+  padding: 0.5rem 0.75rem !important;
+}
+
+.recharts-tooltip-item {
+  color: var(--text-primary) !important;
+}
+
+.recharts-cartesian-grid-horizontal line,
+.recharts-cartesian-grid-vertical line {
+  stroke: var(--border-subtle) !important;
+  stroke-opacity: 0.7 !important;
+}
+
+/* Offcanvas */
+.offcanvas {
+  background-color: #0B132B !important;
+  color: var(--text-primary) !important;
+  border-right: 1px solid var(--border-subtle) !important;
+  border-left: none !important;
+}
+
+.offcanvas.offcanvas-end {
+  border-left: 1px solid var(--border-subtle) !important;
+  border-right: none !important;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--canvas-base);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
+
+/* Dark Mode Bootstrap Utility Neutralizers */
+[data-bs-theme="dark"] .bg-white,
+[data-bs-theme="dark"] .bg-light {
+  background-color: var(--surface-card) !important;
+  color: var(--text-primary) !important;
+}
+
+[data-bs-theme="dark"] .text-dark {
+  color: var(--text-primary) !important;
+}
+
+[data-bs-theme="dark"] .text-muted {
+  color: var(--text-secondary) !important;
+}
+
+[data-bs-theme="dark"] .border {
+  border-color: var(--border-subtle) !important;
+}
+
+[data-bs-theme="dark"] .border-bottom {
+  border-bottom-color: var(--border-subtle) !important;
+}
+
+[data-bs-theme="dark"] .border-top {
+  border-top-color: var(--border-subtle) !important;
+}
+
+[data-bs-theme="dark"] .border-start {
+  border-start-color: var(--border-subtle) !important;
+}
+
+[data-bs-theme="dark"] .border-end {
+  border-end-color: var(--border-subtle) !important;
+}
+
+[data-bs-theme="dark"] .badge.bg-light {
+  background-color: var(--surface-inset) !important;
+  color: var(--text-secondary) !important;
+  border-color: var(--border-subtle) !important;
+}
+
+[data-bs-theme="dark"] .pagination .page-link {
+  background-color: var(--surface-card);
+  border-color: var(--border-subtle);
+  color: var(--text-primary);
+}
+
+[data-bs-theme="dark"] .pagination .page-item.active .page-link {
+  background-color: #4F46E5 !important;
+  border-color: #4F46E5 !important;
+  color: #FFFFFF !important;
+}
+
+[data-bs-theme="dark"] .list-group-item {
+  background-color: var(--surface-card);
+  border-color: var(--border-subtle);
+  color: var(--text-primary);
+}
+
+/* ==========================================================================
+   Snappy Spring & Elastic Micro-Interactions (Instant & Responsive UX)
+   Engineered with fast cubic-bezier curves (<220ms) for high-performance feel
+   ========================================================================== */
+
+/* Tactile Elastic Feedback on Interactive Elements */
+button, .btn, .mobile-nav-item, .nav-item-link {
+  transition: transform 0.16s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.16s ease, background-color 0.15s ease !important;
+}
+
+button:active, .btn:active, .mobile-nav-item:active {
+  transform: scale(0.96) !important;
+}
+
+.btn:hover:not(:disabled) {
+  transform: translateY(-1.5px);
+}
+
+/* Cards Elastic Elevation */
+.card, .mobile-sub-card {
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, border-color 0.18s ease !important;
+}
+
+.card:hover {
+  border-color: rgba(99, 102, 241, 0.25) !important;
+}
+
+/* Smooth Spring Modal Transitions */
+.modal.fade .modal-dialog {
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease-out !important;
+  transform: scale(0.96) translateY(10px);
+}
+
+.modal.show .modal-dialog {
+  transform: scale(1) translateY(0) !important;
+}
+
+/* Snappy Drawer Slide */
+.offcanvas {
+  transition: transform 0.24s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+/* Fast Page Content Spring Entrance */
+.page-viewport > * {
+  animation: fastPageSpring 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fastPageSpring {
+  0% {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

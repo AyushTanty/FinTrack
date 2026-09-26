@@ -1,0 +1,368 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                     String   @id @default(cuid())
+  email                  String   @unique
+  passwordHash           String
+  name                   String?
+  currency               String   @default("INR")
+  timezone               String   @default("Asia/Kolkata")
+  defaultEmergencyBuffer Decimal  @default(0) @db.Decimal(15, 2)
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+
+  accounts          Account[]
+  incomes           Income[]
+  expenses          Expense[]
+  categories        Category[]
+  budgets           Budget[]
+  monthlyPlans      MonthlyPlan[]
+  recurringExpenses RecurringExpense[]
+  subscriptions     Subscription[]
+  plannedPurchases  PlannedPurchase[]
+  savingsGoals      SavingsGoal[]
+  auditLogs         AuditLog[]
+}
+
+model Account {
+  id             String      @id @default(cuid())
+  userId         String
+  name           String
+  type           AccountType
+  initialBalance Decimal     @default(0) @db.Decimal(15, 2)
+  isDefault      Boolean     @default(false)
+  notes          String?
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+  user     User      @relation(fields: [userId], references: [id])
+  incomes  Income[]
+  expenses Expense[]
+}
+
+model Category {
+  id        String       @id @default(cuid())
+  userId    String
+  name      String
+  icon      String?
+  color     String?
+  type      CategoryType
+  isDefault Boolean      @default(false)
+  createdAt DateTime     @default(now())
+
+  user              User               @relation(fields: [userId], references: [id])
+  expenses          Expense[]
+  budgets           Budget[]
+  recurringExpenses RecurringExpense[]
+  plannedPurchases  PlannedPurchase[]
+}
+
+model Income {
+  id          String     @id @default(cuid())
+  userId      String
+  accountId   String?
+  source      String
+  type        IncomeType
+  amount      Decimal    @db.Decimal(15, 2)
+  date        DateTime
+  isRecurring Boolean    @default(false)
+  notes       String?
+  createdVia  CreatedVia @default(MANUAL)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  user    User     @relation(fields: [userId], references: [id])
+  account Account? @relation(fields: [accountId], references: [id])
+}
+
+model Expense {
+  id             String        @id @default(cuid())
+  userId         String
+  accountId      String?
+  categoryId     String
+  description    String
+  amount         Decimal       @db.Decimal(15, 2)
+  date           DateTime
+  paymentMethod  PaymentMethod
+  notes          String?
+  recurringId    String?
+  subscriptionId String?
+  createdVia     CreatedVia    @default(MANUAL)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  deletedAt      DateTime?
+
+  user             User              @relation(fields: [userId], references: [id])
+  account          Account?          @relation(fields: [accountId], references: [id])
+  category         Category          @relation(fields: [categoryId], references: [id])
+  recurringExpense RecurringExpense?  @relation(fields: [recurringId], references: [id])
+  subscription     Subscription?     @relation(fields: [subscriptionId], references: [id])
+}
+
+model RecurringExpense {
+  id          String             @id @default(cuid())
+  userId      String
+  categoryId  String
+  name        String
+  amount      Decimal            @db.Decimal(15, 2)
+  frequency   RecurringFrequency
+  dayOfMonth  Int
+  monthOfYear Int?
+  startDate   DateTime
+  endDate     DateTime?
+  isActive    Boolean            @default(true)
+  notes       String?
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+
+  user     User      @relation(fields: [userId], references: [id])
+  category Category  @relation(fields: [categoryId], references: [id])
+  expenses Expense[]
+}
+
+model Budget {
+  id         String   @id @default(cuid())
+  userId     String
+  categoryId String
+  month      Int
+  year       Int
+  amount     Decimal  @db.Decimal(15, 2)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  user     User     @relation(fields: [userId], references: [id])
+  category Category @relation(fields: [categoryId], references: [id])
+
+  @@unique([userId, categoryId, month, year])
+}
+
+model MonthlyPlan {
+  id                String   @id @default(cuid())
+  userId            String
+  month             Int
+  year              Int
+  plannedIncome     Decimal  @db.Decimal(15, 2)
+  savingsAllocation Decimal  @default(0) @db.Decimal(15, 2)
+  emergencyBuffer   Decimal  @default(0) @db.Decimal(15, 2)
+  notes             String?
+  isRolledOver      Boolean  @default(false)
+  rolloverAmount    Decimal  @default(0) @db.Decimal(15, 2)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@unique([userId, month, year])
+}
+
+model Subscription {
+  id                 String            @id @default(cuid())
+  userId             String
+  categoryId         String?
+  name               String
+  type               SubscriptionType
+  amount             Decimal           @db.Decimal(15, 2)
+  billingCycle       SubscriptionCycle
+  startDate          DateTime
+  nextBillingDate    DateTime
+  isActive           Boolean           @default(true)
+  isFlexible         Boolean           @default(false)
+  skipRule           SkipRule?
+  creditBalance      Decimal           @default(0) @db.Decimal(15, 2)
+  carryForwardAmount Decimal           @default(0) @db.Decimal(15, 2)
+  notes              String?
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+
+  user      User                @relation(fields: [userId], references: [id])
+  usageLogs SubscriptionUsage[]
+  expenses  Expense[]
+}
+
+model SubscriptionUsage {
+  id             String      @id @default(cuid())
+  subscriptionId String
+  date           DateTime
+  status         UsageStatus
+  notes          String?
+  createdAt      DateTime    @default(now())
+
+  subscription Subscription @relation(fields: [subscriptionId], references: [id])
+
+  @@unique([subscriptionId, date])
+}
+
+model PlannedPurchase {
+  id                 String              @id @default(cuid())
+  userId             String
+  categoryId         String?
+  name               String
+  expectedAmount     Decimal             @db.Decimal(15, 2)
+  expectedDate       DateTime?
+  priority           Priority
+  isRecurring        Boolean             @default(false)
+  recurrence         RecurringFrequency?
+  notes              String?
+  status             PurchaseStatus      @default(PLANNED)
+  convertedExpenseId String?
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+
+  user     User      @relation(fields: [userId], references: [id])
+  category Category? @relation(fields: [categoryId], references: [id])
+}
+
+model SavingsGoal {
+  id                  String      @id @default(cuid())
+  userId              String
+  name                String
+  targetAmount        Decimal     @db.Decimal(15, 2)
+  currentAmount       Decimal     @default(0) @db.Decimal(15, 2)
+  targetDate          DateTime?
+  monthlyContribution Decimal     @default(0) @db.Decimal(15, 2)
+  status              GoalStatus  @default(ACTIVE)
+  notes               String?
+  createdAt           DateTime    @default(now())
+  updatedAt           DateTime    @updatedAt
+
+  user          User                  @relation(fields: [userId], references: [id])
+  contributions SavingsContribution[]
+}
+
+model SavingsContribution {
+  id         String     @id @default(cuid())
+  goalId     String
+  amount     Decimal    @db.Decimal(15, 2)
+  date       DateTime
+  notes      String?
+  createdVia CreatedVia @default(MANUAL)
+  createdAt  DateTime   @default(now())
+
+  goal SavingsGoal @relation(fields: [goalId], references: [id])
+}
+
+model AuditLog {
+  id        String      @id @default(cuid())
+  userId    String
+  entity    String
+  entityId  String
+  action    AuditAction
+  before    Json?
+  after     Json?
+  createdAt DateTime    @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+enum AccountType {
+  BANK
+  CASH
+  UPI
+  WALLET
+  OTHER
+}
+
+enum CategoryType {
+  FIXED
+  VARIABLE
+  DISCRETIONARY
+  SAVINGS
+  INCOME
+}
+
+enum IncomeType {
+  SALARY
+  FREELANCE
+  ONE_TIME
+  OTHER
+}
+
+enum PaymentMethod {
+  CASH
+  UPI
+  CARD
+  BANK_TRANSFER
+  OTHER
+}
+
+enum RecurringFrequency {
+  MONTHLY
+  QUARTERLY
+  YEARLY
+}
+
+enum SubscriptionType {
+  OTT
+  GYM
+  INTERNET
+  MOBILE
+  SOFTWARE
+  COURSE
+  FOOD
+  OTHER
+}
+
+enum SubscriptionCycle {
+  WEEKLY
+  MONTHLY
+  QUARTERLY
+  YEARLY
+}
+
+enum SkipRule {
+  NO_ADJUSTMENT
+  REFUND_PER_DAY
+  CREDIT_PER_DAY
+  CARRY_FORWARD
+  MANUAL_ADJUSTMENT
+}
+
+enum UsageStatus {
+  USED
+  SKIPPED
+  HOLIDAY
+  UNAVAILABLE
+  CUSTOM
+}
+
+enum Priority {
+  HIGH
+  MEDIUM
+  LOW
+}
+
+enum PurchaseStatus {
+  PLANNED
+  PURCHASED
+  CANCELLED
+  DEFERRED
+}
+
+enum GoalStatus {
+  ACTIVE
+  COMPLETED
+  PAUSED
+  CANCELLED
+}
+
+enum AuditAction {
+  CREATED
+  UPDATED
+  DELETED
+  CONVERTED
+  ROLLED_OVER
+  CONTRIBUTION_ADDED
+  SUBSCRIPTION_BILLED
+}
+
+enum CreatedVia {
+  MANUAL
+  AI
+}
