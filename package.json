@@ -1,4 +1,10 @@
 {
+  "name": "fintrack-root",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "cd server && npm start",
+    "build": "cd server && npm install && npx prisma generate"
+  },
   "devDependencies": {
     "prisma": "^5.22.0"
   },
